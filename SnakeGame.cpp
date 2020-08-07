@@ -168,7 +168,6 @@ void drawApple(){
 }
 
 void addTails(){
-    Sleep(100);
     switch(snakeDr){
         case UP: snakePosX.push(snakePosX.back()); snakePosY.push(snakePosY.back()-1); break;
         case DOWN: snakePosX.push(snakePosX.back()); snakePosY.push(snakePosY.back()+1); break;
