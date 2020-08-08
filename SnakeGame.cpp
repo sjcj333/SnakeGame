@@ -25,6 +25,16 @@ using namespace std;
 餌婁: ≡ 3
 */
 
+void CursorView(int show)
+{
+    HANDLE hConsole;
+    CONSOLE_CURSOR_INFO ConsoleCursor;
+    hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    ConsoleCursor.bVisible = show;
+    ConsoleCursor.dwSize = 1;
+    SetConsoleCursorInfo(hConsole , &ConsoleCursor);
+}
+
 void setColor(int color){
     SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
@@ -124,10 +134,10 @@ void setSnakeDr(){
         int press = _getch();
         if (press=DRKEY){
             press = _getch();
-            if ((press==UP&&beforeDr!=DOWN) || (press==DOWN&&beforeDr!=UP) ||
-            (press==LEFT&&beforeDr!=RIGHT) || (press==RIGHT&&beforeDr!=LEFT)){
+            if ((press==UP&&snakeDr!=DOWN) || (press==DOWN&&snakeDr!=UP) ||
+            (press==LEFT&&snakeDr!=RIGHT) || (press==RIGHT&&snakeDr!=LEFT) ||(press==snakeDr)){
                 switch(press){
-                    case UP: snakeDr = UP; beforeDr = UP; break;
+                    case UP: snakeDr = UP; snakeDr = UP; break;
                     case DOWN: snakeDr = DOWN; beforeDr = DOWN; break;
                     case LEFT: snakeDr = LEFT; beforeDr = LEFT; break;
                     case RIGHT: snakeDr = RIGHT; beforeDr = RIGHT; break;
@@ -142,6 +152,9 @@ void drawMap(){
         for (int i=0; i<mapWidth; i++){
             if (map[j][i]==2){
                 gotoxy(i, j, "﹤", 15);
+            }
+            if (map[j][i]==0){
+                gotoxy(i, j, "  ", 15);
             }
         }   
     }
@@ -180,7 +193,6 @@ void addTails(){
 void moveSnake(){
     if (!appleCrash){
         snake[snakePosY.front()][snakePosX.front()]=0;
-        gotoxy(snakePosX.front(), snakePosY.front(), " ");
         if (snakeDr == UP){
             snakePosY.push(snakePosY.back()-1);
             snakePosX.push(snakePosX.back());
@@ -197,6 +209,7 @@ void moveSnake(){
             snakePosX.push(snakePosX.back()+1);
             snakePosY.push(snakePosY.back());
         }
+        gotoxy(snakePosX.front(), snakePosY.front(), " ");
         snakePosX.pop();
         snakePosY.pop();
     }
@@ -278,13 +291,27 @@ void addApple(){
     }
 }
 
+void drawTitle(){
+    int press;
+    gotoxy(mapWidth/2-7,6,"旨式式式式式式式式式式式式旬");
+    gotoxy(mapWidth/2-7,7,"弛                        弛");
+    gotoxy(mapWidth/2-7,8,"９   S N A K E  G A M E   Ⅱ"); 
+    gotoxy(mapWidth/2-7,9,"弛                        弛");
+    gotoxy(mapWidth/2-7,10,"汍式式式式式式式式式式式式污");
+    gotoxy(mapWidth/2-9,15,"<Press the space bar to get started.>");
+    do{
+        press = _getch();
+    }while(press != 32);
+}
+
 int main()
 {
-    srand((unsigned int)time(NULL));
+    CursorView(0);
+    srand((unsigned int)time(NULL));   
     gameInit(); start  = 0;
+    drawTitle();
     drawMap();
-    while (1)
-    {
+    while(1){
         setSnakeDr();
         addSnake();
         addApple();
