@@ -304,6 +304,16 @@ void drawTitle(){
     }while(press != 32);
 }
 
+int GameOver(){
+    int press;
+    do{
+        press = _getch();
+    }while(press != 113 && press != 32);
+
+    if (press == 113){return 1;}
+    else if (press == 32){return 0;}
+}
+
 int main()
 {
     CursorView(0);
@@ -315,7 +325,7 @@ int main()
         setSnakeDr();
         addSnake();
         addApple();
-        if(snakeCrash()){break;}
+        if(snakeCrash()){if(GameOver()){break;}}
         drawApple();
         drawSnake();
         moveSnake();
